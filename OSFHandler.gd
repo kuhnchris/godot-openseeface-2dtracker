@@ -1,34 +1,49 @@
-extends Node2D
+extends Node
+class_name OpenSeeFaceHandler
 
-var listenPort: int = 11573
-var listenHost: String = "127.0.0.1"
+export var listenPort: int = 11573
+export var listenHost: String = "127.0.0.1"
+export var points = 68
+export var started = false setget _onStarted
 var udpServerComponent: UDPServer
-var points = 68
-var pointArr = []
-export var factor = 1.5
-var debugVBox
+var _isStarted = false
+
+signal onDataPackage
+
+func _onStarted(_newVal):
+	if _isStarted == false:
+		started = false
+	else:
+		started = true
+
+func startServer():
+	udpServerComponent = UDPServer.new()
+	var _err = udpServerComponent.listen(listenPort,listenHost)
+	print_debug("opened UDP server: %s:%s" % [listenHost,listenPort])
+	started = true
+	_isStarted = true
 
 func _ready():
-	udpServerComponent = UDPServer.new()
-	udpServerComponent.listen(listenPort,listenHost)
-	print_debug("opened UDP server: %s:%s" % [listenHost,listenPort])
-	debugVBox = get_node("debug/debug_vbox")
-	var template = $template
-	for i in range(points):
-		var x = template.duplicate()
-		x.name = str(i) + "_point"
-		add_child(x)
-		pointArr.append(x)
-
-
+	started = false
+	_isStarted = false
+	
 func _process(_delta):
-	udpServerComponent.poll()
+	if _isStarted == false:
+		return
+		
+	# poll connections
+	var _poll = udpServerComponent.poll()
+
+	# new udp transfer available?
 	if udpServerComponent.is_connection_available():
+		
+		# Get udp message from openSeeFace
 		var conn = udpServerComponent.take_connection()
-		#print_debug("package received from new host! (%s:%s)" % [conn.get_packet_ip(), conn.get_packet_port()])
 		var data: PoolByteArray = conn.get_packet()
-		#print_debug("received package - length: %s " % [data.size()])
-		var dataPackage = {
+		conn.close()
+
+		# process data, prepare for signal
+		var dataPackage := {
 			"time": -1,
 			"id": -1,
 			"cam": {
@@ -80,57 +95,75 @@ func _process(_delta):
 		var streamPos = 0
 		streamBuff.data_array = data.subarray(streamPos,8)
 		streamPos = streamPos + 8
+		
 		dataPackage["time"] = streamBuff.get_double()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["id"] = streamBuff.get_32()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["cam"]["x"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["cam"]["y"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["rightEyeOpen"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["leftEyeOpen"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+1)
 		streamPos = streamPos + 1
+		
 		dataPackage["3d"] = streamBuff.get_8()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["fitError"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["quaternion"]["x"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["quaternion"]["y"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["quaternion"]["z"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["quaternion"]["w"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["euler"]["x"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["euler"]["y"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["euler"]["z"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["translation"]["x"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["translation"]["y"] = streamBuff.get_float()
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
+		
 		dataPackage["translation"]["z"] = streamBuff.get_float()
 
 		#print("time: %d | id %d | cam x: %d y: %d | 3d?: %d | fitError: %d | quaternion: %d/%d/%d/%d | euler: %d/%d/%d | translation: %d/%d/%d" % [dataPackage["time"],dataPackage["id"],dataPackage["cam"]["x"],dataPackage["cam"]["y"],dataPackage["3d"],dataPackage["fitError"], dataPackage["quaternion"]["x"], dataPackage["quaternion"]["y"],dataPackage["quaternion"]["z"],dataPackage["quaternion"]["w"],dataPackage["euler"]["x"],dataPackage["euler"]["y"],dataPackage["euler"]["z"],dataPackage["translation"]["x"],dataPackage["translation"]["y"],dataPackage["translation"]["z"] ])
@@ -139,6 +172,7 @@ func _process(_delta):
 			streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 			streamPos = streamPos + 4
 			dataPackage["confidence"].append(streamBuff.get_float())
+		
 		
 		for _i in range(points):
 			streamBuff.data_array = data.subarray(streamPos,streamPos+4)
@@ -149,8 +183,8 @@ func _process(_delta):
 			var b = streamBuff.get_float()
 			var v = Vector2(a,b)
 			dataPackage["points"].append(v)
-			pointArr[_i].position = v * factor
 
+		
 		for _i in range(points+2):
 			streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 			streamPos = streamPos + 4
@@ -203,14 +237,8 @@ func _process(_delta):
 		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
 		streamPos = streamPos + 4
 		dataPackage["features"]["MouthOpen"] = streamBuff.get_float()
-		streamBuff.data_array = data.subarray(streamPos,streamPos+4)
+		streamBuff.data_array = data.subarray(streamPos,streamPos+3)
 		streamPos = streamPos + 4
 		dataPackage["features"]["MouthWide"] = streamBuff.get_float()
 
-		for i in dataPackage["features"].keys():
-			var n = debugVBox.get_node_or_null("obj_"+i)
-			if n == null:
-				n = Label.new()
-				n.name = "obj_"+i
-				debugVBox.add_child(n)
-			n.text = i + ": " + str(dataPackage["features"][i])
+		emit_signal("onDataPackage", dataPackage)

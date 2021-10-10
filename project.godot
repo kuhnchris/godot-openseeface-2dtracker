@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node",
+"class": "OpenSeeFaceHandler",
+"language": "GDScript",
+"path": "res://OSFHandler.gd"
+} ]
+_global_script_class_icons={
+"OpenSeeFaceHandler": ""
+}
+
 [application]
 
 config/name="gd-openseeface-2dtrack"
