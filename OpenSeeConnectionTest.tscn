@@ -1,22 +1,12 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://OpenSeeConnectionTest.gd" type="Script" id=1]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 5, 5 )
+[ext_resource path="res://pointTemplate.tscn" type="PackedScene" id=2]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
 
-[node name="template" type="Polygon2D" parent="."]
-position = Vector2( -1, 0 )
-polygon = PoolVector2Array( 0, 10, 10, 10, 10, 0, 0, 0 )
-
-[node name="Area2D" type="Area2D" parent="template"]
-position = Vector2( 5, 5 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="template/Area2D"]
-shape = SubResource( 1 )
+[node name="template" parent="." instance=ExtResource( 2 )]
 
 [node name="debug" type="ScrollContainer" parent="."]
 margin_right = 528.0

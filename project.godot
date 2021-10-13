@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="gd-openseeface-2dtrack"
-run/main_scene="res://OpenSeeConnectionTest.tscn"
+run/main_scene="res://FaceAvatar2DTest.tscn"
 config/icon="res://icon.png"
 
 [physics]

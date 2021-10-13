@@ -1,10 +1,262 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://OSFHandler.gd" type="Script" id=1]
+[ext_resource path="res://examplePuppet/eyeL.png" type="Texture" id=2]
+[ext_resource path="res://examplePuppet/eyeR.png" type="Texture" id=3]
+[ext_resource path="res://puppetMaster.gd" type="Script" id=4]
+[ext_resource path="res://UI_FaceAvatar2DTest.gd" type="Script" id=5]
+[ext_resource path="res://examplePuppet/eyeBrowR.png" type="Texture" id=6]
+[ext_resource path="res://examplePuppet/eyeBrowL.png" type="Texture" id=7]
+[ext_resource path="res://examplePuppet/nose.png" type="Texture" id=8]
+[ext_resource path="res://examplePuppet/mouth.png" type="Texture" id=9]
+[ext_resource path="res://examplePuppet/face.png" type="Texture" id=10]
 
 [node name="Base" type="Node"]
+script = ExtResource( 5 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = -29.0
+margin_top = -50.0
+margin_right = 1068.0
+margin_bottom = 662.0
+color = Color( 0.360784, 0.454902, 0.341176, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="OSF" type="Node" parent="."]
 script = ExtResource( 1 )
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="puppetMaster" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="puppetMaster"]
+
+[node name="face" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 10 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="eyeL" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 2 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="eyeR" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="eyebrowR" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="eyebrowL" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 7 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="nose" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 8 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mouth" type="TextureRect" parent="puppetMaster/CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = -472.0
+margin_bottom = -260.0
+texture = ExtResource( 9 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="GridContainer" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+columns = 2
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+margin_right = 106.0
+margin_bottom = 20.0
+text = "Start Tracking"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 3.0
+margin_right = 168.0
+margin_bottom = 17.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+margin_top = 29.0
+margin_right = 106.0
+margin_bottom = 43.0
+text = "Scale Factor"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 24.0
+margin_right = 168.0
+margin_bottom = 48.0
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label4" type="Label" parent="VBoxContainer"]
+margin_top = 57.0
+margin_right = 106.0
+margin_bottom = 71.0
+text = "Fixed Eye Height"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit2" type="LineEdit" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 52.0
+margin_right = 168.0
+margin_bottom = 76.0
+text = "50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label5" type="Label" parent="VBoxContainer"]
+margin_top = 85.0
+margin_right = 106.0
+margin_bottom = 99.0
+text = "x:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit3" type="LineEdit" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 80.0
+margin_right = 168.0
+margin_bottom = 104.0
+text = "-50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label6" type="Label" parent="VBoxContainer"]
+margin_top = 113.0
+margin_right = 106.0
+margin_bottom = 127.0
+text = "y:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit4" type="LineEdit" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 108.0
+margin_right = 168.0
+margin_bottom = 132.0
+text = "-50"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_top = 136.0
+margin_right = 106.0
+margin_bottom = 150.0
+text = "Position"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="eyePos" type="Label" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 136.0
+margin_right = 168.0
+margin_bottom = 150.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="onDataPackage" from="OSF" to="puppetMaster" method="_on_OSF_onDataPackage"]
+[connection signal="onDataPackage" from="OSF" to="." method="_on_OSF_onDataPackage"]
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/LineEdit" to="." method="_on_LineEdit_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/LineEdit2" to="." method="_on_LineEdit2_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/LineEdit3" to="." method="_on_LineEdit3_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/LineEdit4" to="." method="_on_LineEdit4_text_changed"]
