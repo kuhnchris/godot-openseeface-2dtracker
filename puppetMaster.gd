@@ -12,6 +12,8 @@ var puppetEyebrowR: TextureRect
 var puppetNose: TextureRect
 var puppetMouth: TextureRect
 var puppetFace: TextureRect
+var puppetFacePolygon: Polygon2D
+
 export var eyeHeight: float = 60
 export var scaleFactor: float = 1.5
 export var moveBaseTransformX: float = -50
@@ -26,7 +28,11 @@ func _ready():
 	puppetEyebrowR = $CanvasLayer/eyebrowR
 	puppetNose = $CanvasLayer/nose
 	puppetMouth = $CanvasLayer/mouth
-	puppetFace = $CanvasLayer/face
+	var tmpPuppetFace = $CanvasLayer/face
+	if tmpPuppetFace is Polygon2D:
+		puppetFacePolygon = tmpPuppetFace
+	else:
+		puppetFace = tmpPuppetFace
 	pass # Replace with function body.
 
 
@@ -55,15 +61,18 @@ func _on_OSF_onDataPackage(package):
 
 	puppetEyeL.set_global_position(Vector2(eyeLpos.x*scaleFactor - moveBaseTransformX,eyeLpos.y*scaleFactor  - moveBaseTransformY))
 	puppetEyeL.rect_size = Vector2(eyeLposEnd.x*scaleFactor - eyeLpos.x*scaleFactor, eyeHeight)
-
+	puppetEyeL.rect_global_position.y = puppetEyeL.rect_global_position.y - puppetEyeL.texture.get_size().y / 2
 	puppetEyeR.set_global_position(Vector2(eyeRpos.x*scaleFactor - moveBaseTransformX,eyeRpos.y*scaleFactor  - moveBaseTransformY))
 	puppetEyeR.rect_size = Vector2(eyeRposEnd.x*scaleFactor - eyeRpos.x*scaleFactor, eyeHeight)
+	puppetEyeR.rect_global_position.y = puppetEyeR.rect_global_position.y - puppetEyeR.texture.get_size().y / 2
 
-	puppetEyebrowL.set_global_position(Vector2(eyebrowLpos.x*scaleFactor - moveBaseTransformX,eyebrowLpos.y*scaleFactor  - moveBaseTransformY))
+	puppetEyebrowL.set_global_position(Vector2(eyebrowLpos.x*scaleFactor - moveBaseTransformX,eyebrowLposEnd.y*scaleFactor  - moveBaseTransformY))
 	puppetEyebrowL.rect_size = Vector2(eyebrowLposEnd.x*scaleFactor - eyebrowLpos.x*scaleFactor, eyeHeight)
+	puppetEyebrowL.rect_global_position.y = puppetEyebrowL.rect_global_position.y - puppetEyebrowL.texture.get_size().y / 2
 
 	puppetEyebrowR.set_global_position(Vector2(eyebrowRpos.x*scaleFactor - moveBaseTransformX,eyebrowRpos.y*scaleFactor  - moveBaseTransformY))
 	puppetEyebrowR.rect_size = Vector2(eyebrowRposEnd.x*scaleFactor - eyebrowRpos.x*scaleFactor, eyeHeight)
+	puppetEyebrowR.rect_global_position.y = puppetEyebrowR.rect_global_position.y - puppetEyebrowR.texture.get_size().y / 2
 
 	# top left = nose bottom left.x / nose top.y
 	puppetNose.set_global_position(Vector2(noseLeft.x*scaleFactor - moveBaseTransformX,noseTop.y*scaleFactor  - moveBaseTransformY))
@@ -72,8 +81,21 @@ func _on_OSF_onDataPackage(package):
 	
 	puppetMouth.set_global_position(Vector2(mouthLeft.x*scaleFactor - moveBaseTransformX,mouthTop.y*scaleFactor  - moveBaseTransformY))
 	puppetMouth.rect_size = Vector2((mouthRight.x - mouthLeft.x)*scaleFactor, (mouthBottom.y*scaleFactor) - (mouthTop.y*scaleFactor) + eyeHeight)
+	puppetMouth.rect_global_position.y = puppetMouth.rect_global_position.y - puppetMouth.texture.get_size().y / 2
 	
-	
+	#puppetFace.set_global_position(Vector2(faceLeft.x*scaleFactor - moveBaseTransformX,faceLeft.y*scaleFactor - (faceBottom.y*scaleFactor - faceRight.y*scaleFactor) - moveBaseTransformY))
+	#puppetFace.rect_size = Vector2((faceRight.x - faceLeft.x)*scaleFactor, (faceBottom.y*scaleFactor - faceRight.y*scaleFactor)*2)
 
-	puppetFace.set_global_position(Vector2(faceLeft.x*scaleFactor - moveBaseTransformX,faceLeft.y*scaleFactor - (faceBottom.y*scaleFactor - faceRight.y*scaleFactor) - moveBaseTransformY))
-	puppetFace.rect_size = Vector2((faceRight.x - faceLeft.x)*scaleFactor + 200, (faceBottom.y*scaleFactor - faceRight.y*scaleFactor)*2)
+	if puppetFace != null:
+		puppetFace.set_global_position(Vector2(faceLeft.x*scaleFactor - moveBaseTransformX,faceLeft.y*scaleFactor - moveBaseTransformY))
+		puppetFace.rect_size = Vector2((faceRight.x - faceLeft.x)*scaleFactor, (faceBottom.y*scaleFactor - faceRight.y*scaleFactor))
+	else:
+		var a := PoolVector2Array()
+
+		for i in range(17):
+			a.append(Vector2(package.points[i].x - package.points[0].x, package.points[i].y - package.points[0].y))
+		puppetFacePolygon.polygon = a
+		puppetFacePolygon.global_position = Vector2(package.points[0].x, package.points[0].y)
+
+		#puppetFacePolygon.uv = a
+		#puppetFace.rect_global_position.y = puppetFace.rect_global_position.y - puppetFace.texture.get_size().y / 2

@@ -19,7 +19,7 @@ margin_left = -29.0
 margin_top = -50.0
 margin_right = 1068.0
 margin_bottom = 662.0
-color = Color( 0.360784, 0.454902, 0.341176, 1 )
+color = Color( 0.647059, 0.752941, 0.623529, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -32,20 +32,10 @@ script = ExtResource( 4 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="puppetMaster"]
 
-[node name="face" type="TextureRect" parent="puppetMaster/CanvasLayer"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -622.873
-margin_top = -399.534
-margin_right = -582.873
-margin_bottom = -359.534
+[node name="face" type="Polygon2D" parent="puppetMaster/CanvasLayer"]
 texture = ExtResource( 10 )
-expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+polygon = PoolVector2Array( -215.387, 48.2521, -305.342, 103.537, -188.071, 150.013, -106.123, 126.319, -67.5033, 48.2521 )
+uv = PoolVector2Array( 0, 0, 10, 10, 20, 20, 30, 30, 40, 40 )
 
 [node name="eyeL" type="TextureRect" parent="puppetMaster/CanvasLayer"]
 anchor_left = 0.5
@@ -256,6 +246,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label7" type="Label" parent="VBoxContainer"]
+margin_top = 159.0
+margin_right = 106.0
+margin_bottom = 173.0
+text = "Show overlay"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer"]
+margin_left = 110.0
+margin_top = 154.0
+margin_right = 168.0
+margin_bottom = 178.0
+pressed = true
+flat = true
+align = 1
+expand_icon = true
+
 [connection signal="onDataPackage" from="OSF" to="puppetMaster" method="_on_OSF_onDataPackage"]
 [connection signal="onDataPackage" from="OSF" to="." method="_on_OSF_onDataPackage"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
@@ -263,3 +272,4 @@ __meta__ = {
 [connection signal="text_changed" from="VBoxContainer/LineEdit2" to="." method="_on_LineEdit2_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/LineEdit3" to="." method="_on_LineEdit3_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/LineEdit4" to="." method="_on_LineEdit4_text_changed"]
+[connection signal="pressed" from="VBoxContainer/CheckBox" to="." method="_on_CheckBox_pressed"]
